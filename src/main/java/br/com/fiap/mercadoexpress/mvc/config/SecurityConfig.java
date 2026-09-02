@@ -49,6 +49,11 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico").permitAll()
                         // ---------- Rotas publicas ----------
                         .requestMatchers("/", "/produtos/**", "/login", "/acesso-negado").permitAll()
+                        // O Spring Boot despacha os erros para /error, e esse despacho
+                        // tambem passa por esta cadeia. Sem liberar a rota, qualquer
+                        // falha numa pagina publica virava redirect para /login - e,
+                        // em cliente sem cookie, um loop de redirecionamento.
+                        .requestMatchers("/error").permitAll()
                         // ---------- Rotas privadas ----------
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         // ---------- Qualquer outra coisa ----------
