@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 /**
  * Configuracao do Spring Security.
@@ -60,14 +61,14 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("usuario")
                         .passwordParameter("senha")
-                        .defaultSuccessUrl("/admin", true)
+                        .successHandler(destinoAposLogin())
                         .failureUrl("/login?erro")
                         .permitAll())
 
                 // Logout so por POST (o header manda o token CSRF junto).
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/?saiu")
+                        .logoutSuccessUrl("/?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll())
@@ -76,6 +77,19 @@ public class SecurityConfig {
                 .exceptionHandling(erros -> erros.accessDeniedPage("/acesso-negado"));
 
         return http.build();
+    }
+
+    /**
+     * Depois de autenticar, o administrador cai direto no painel e os demais
+     * perfis voltam para a vitrine. Assim o ROLE_USER nao aterrissa em uma
+     * pagina 403 logo apos digitar a senha correta.
+     */
+    private AuthenticationSuccessHandler destinoAposLogin() {
+        return (requisicao, resposta, autenticacao) -> {
+            boolean administrador = autenticacao.getAuthorities().stream()
+                    .anyMatch(permissao -> "ROLE_ADMIN".equals(permissao.getAuthority()));
+            resposta.sendRedirect(requisicao.getContextPath() + (administrador ? "/admin" : "/"));
+        };
     }
 
     /**

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabeca('Vitrine')}"></head>
+<body>
+
+<a class="pular-para-conteudo" href="#conteudo">Pular para o conteudo</a>
+<header th:replace="~{fragments/layout :: topo('publico')}"></header>
+
+<main id="conteudo" class="conteudo">
+    <div class="envelope">
+
+        <div th:replace="~{fragments/layout :: avisos}"></div>
+        <p class="aviso" role="status" th:if="${param.logout}">
+            Voce saiu da sua conta. A vitrine continua aberta para todo mundo.
+        </p>
+
+        <div class="abertura">
+            <div>
+                <h1 th:if="${!temFiltro}">A feira de hoje</h1>
+                <h1 th:if="${temFiltro}">Resultado da busca</h1>
+                <p th:if="${!temFiltro}">
+                    Tudo o que esta nas gondolas agora, com preco de etiqueta.
+                    Clique em um produto para ver a ficha completa.
+                </p>
+                <p th:if="${temFiltro}">
+                    <span th:if="${busca}">Nome contendo <strong th:text="${busca}">termo</strong>.</span>
+                    <span th:if="${setorSelecionado}">Setor <strong th:text="${setorSelecionado}">setor</strong>.</span>
+                </p>
+            </div>
+            <span class="abertura__contagem"
+                  th:text="${pagina.totalElements == 1} ? '1 produto na vitrine'
+                           : ${pagina.totalElements} + ' produtos na vitrine'">12 produtos na vitrine</span>
+        </div>
+
+        <!-- Filtro por setor: links, para o estado ficar na URL e ser compartilhavel -->
+        <nav class="filtros" th:if="${!#lists.isEmpty(setores)}" aria-label="Filtrar por setor">
+            <span class="filtros__rotulo">Setores</span>
+            <a class="chip" th:href="@{/(busca=${busca})}"
+               th:attr="aria-current=${setorSelecionado == null} ? 'true' : null">Todos</a>
+            <a class="chip" th:each="s : ${setores}"
+               th:href="@{/(busca=${busca}, setor=${s})}"
+               th:attr="aria-current=${s == setorSelecionado} ? 'true' : null"
+               th:text="${s}">Hortifruti</a>
+        </nav>
+
+        <!-- Grade de produtos -->
+        <div class="vitrine" th:if="${pagina.hasContent()}">
+            <a class="produto" th:each="produto : ${pagina.content}"
+               th:href="@{/produtos/{id}(id=${produto.id})}">
+
+                <span class="etiqueta">
+                    <span class="etiqueta__moeda">R$</span>
+                    <span th:text="${#numbers.formatDecimal(produto.preco, 1, 'POINT', 2, 'COMMA')}">7,99</span>
+                </span>
+
+                <span class="produto__setor" th:text="${produto.setor}">Hortifruti</span>
+                <span class="produto__nome" th:text="${produto.nome}">Banana prata</span>
+                <p class="produto__detalhe">
+                    <span th:text="${produto.tipo}">Fruta</span>
+                    <span th:if="${produto.tamanho}" th:text="'&middot; ' + ${produto.tamanho}">&middot; 1kg</span>
+                </p>
+
+                <span class="produto__rodape">
+                    <span class="selo selo--esgotado" th:if="${produto.esgotado}">Sem estoque hoje</span>
+                    <span class="selo selo--estoque" th:unless="${produto.esgotado}"
+                          th:text="${produto.estoque} + ' em estoque'">30 em estoque</span>
+                </span>
+            </a>
+        </div>
+
+        <!-- Estado vazio: convite, nao aviso de sistema -->
+        <div class="vazio" th:unless="${pagina.hasContent()}">
+            <h2 th:if="${temFiltro}">Nao achamos esse item na feira</h2>
+            <h2 th:unless="${temFiltro}">As gondolas ainda estao vazias</h2>
+            <p th:if="${temFiltro}">
+                Tente outro nome ou volte para a vitrine completa: o estoque muda todo dia.
+            </p>
+            <p th:unless="${temFiltro}">
+                Assim que o primeiro produto for cadastrado no painel, ele aparece aqui
+                com a etiqueta de preco.
+            </p>
+            <a class="botao" th:href="@{/}" th:if="${temFiltro}">Ver a vitrine completa</a>
+            <a class="botao" th:href="@{/admin/produtos/novo}" th:unless="${temFiltro}">Cadastrar o primeiro produto</a>
+        </div>
+
+        <nav th:replace="~{fragments/paginacao :: paginacao(${pagina}, '/', ${busca}, ${setorSelecionado})}"></nav>
+
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: rodape}"></footer>
+</body>
+</html>

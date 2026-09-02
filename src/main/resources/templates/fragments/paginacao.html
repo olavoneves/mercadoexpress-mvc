@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!--
+  Paginacao reaproveitada pela vitrine e pelo painel. Recebe a Page do Spring
+  Data, a URL base e os filtros ativos, para que trocar de pagina nao perca
+  a busca nem o setor selecionado.
+-->
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav class="paginacao" th:fragment="paginacao(pagina, base, busca, setor)"
+     th:if="${pagina.totalPages > 1}" aria-label="Paginacao">
+
+    <a th:if="${!pagina.first}"
+       th:href="@{${base}(page=${pagina.number - 1}, busca=${busca}, setor=${setor})}"
+       rel="prev">Anterior</a>
+    <span th:if="${pagina.first}" class="paginacao__inerte">Anterior</span>
+
+    <th:block th:each="i : ${#numbers.sequence(0, pagina.totalPages - 1)}">
+        <span th:if="${i == pagina.number}" aria-current="page" th:text="${i + 1}">1</span>
+        <a th:unless="${i == pagina.number}"
+           th:href="@{${base}(page=${i}, busca=${busca}, setor=${setor})}"
+           th:text="${i + 1}">2</a>
+    </th:block>
+
+    <a th:if="${!pagina.last}"
+       th:href="@{${base}(page=${pagina.number + 1}, busca=${busca}, setor=${setor})}"
+       rel="next">Proxima</a>
+    <span th:if="${pagina.last}" class="paginacao__inerte">Proxima</span>
+
+    <span class="paginacao__total"
+          th:text="'Pagina ' + ${pagina.number + 1} + ' de ' + ${pagina.totalPages}">Pagina 1 de 3</span>
+</nav>
+
+</body>
+</html>

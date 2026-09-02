@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabeca('Acesso negado')}"></head>
+<body>
+
+<a class="pular-para-conteudo" href="#conteudo">Pular para o conteudo</a>
+<header th:replace="~{fragments/layout :: topo('erro')}"></header>
+
+<main id="conteudo" class="conteudo">
+    <div class="envelope">
+        <section class="recado">
+            <p class="recado__codigo">403</p>
+            <h1>Essa porta e so da equipe</h1>
+            <p>
+                Voce esta autenticado, mas a sua conta nao tem permissao de administrador.
+                O painel de produtos aceita apenas o perfil <strong>ROLE_ADMIN</strong>.
+            </p>
+            <p>
+                <a class="botao" th:href="@{/}">Voltar para a vitrine</a>
+            </p>
+        </section>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: rodape}"></footer>
+</body>
+</html>

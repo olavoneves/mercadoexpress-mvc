@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabeca('Entrar')}"></head>
+<body>
+
+<a class="pular-para-conteudo" href="#conteudo">Pular para o conteudo</a>
+<header th:replace="~{fragments/layout :: topo('login')}"></header>
+
+<main id="conteudo" class="conteudo">
+    <div class="envelope">
+
+        <section class="entrada">
+            <h1>Entrar no painel</h1>
+            <p class="entrada__intro">
+                A vitrine e aberta a todo mundo. Cadastrar, editar e excluir produtos
+                exige uma conta de administrador.
+            </p>
+
+            <p class="aviso aviso--erro" role="alert" th:if="${param.erro}">
+                Usuario ou senha incorretos. Confira os dados e tente de novo.
+            </p>
+            <p class="aviso" role="status" th:if="${param.logout}">
+                Voce saiu da sua conta.
+            </p>
+
+            <!-- th:action garante o envio do token CSRF junto do formulario -->
+            <form th:action="@{/login}" method="post">
+                <div class="campo">
+                    <label for="usuario">Usuario</label>
+                    <input id="usuario" name="usuario" type="text" autocomplete="username"
+                           required autofocus>
+                </div>
+
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <input id="senha" name="senha" type="password" autocomplete="current-password" required>
+                </div>
+
+                <button type="submit" class="botao botao--largo">Entrar</button>
+            </form>
+
+            <div class="credenciais">
+                <p><strong>Credenciais de teste</strong> (projeto academico)</p>
+                <p>
+                    Administrador: <code>admin</code> / <code>admin123</code><br>
+                    Cliente: <code>user</code> / <code>user123</code>
+                </p>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: rodape}"></footer>
+</body>
+</html>

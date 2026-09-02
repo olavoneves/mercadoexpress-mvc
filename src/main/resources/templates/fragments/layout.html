@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--
+  Fragmentos reaproveitados por todas as paginas: head, cabecalho, faixa
+  administrativa e rodape. Nenhum HTML de estrutura e repetido nas telas.
+-->
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="cabeca(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|${titulo} - Mercado Express|">Mercado Express</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75,500;75,600;75,700&family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body>
+
+<!-- ================= Cabecalho =================
+     secao = 'publico' mostra a busca da vitrine; 'admin' esconde. -->
+<header class="topo" th:fragment="topo(secao)">
+    <div class="envelope topo__barra">
+        <a class="marca" th:href="@{/}">
+            Mercado <span class="marca__express">Express</span>
+            <span class="marca__selo">Feira de bairro</span>
+        </a>
+
+        <form class="topo__busca" th:if="${secao == 'publico'}" th:action="@{/}" method="get">
+            <label class="pular-para-conteudo" for="busca-topo">Buscar produto pelo nome</label>
+            <input id="busca-topo" type="search" name="busca" th:value="${param.busca}"
+                   placeholder="Buscar por nome, ex.: banana">
+            <input type="hidden" name="setor" th:value="${param.setor}">
+            <button type="submit">Buscar</button>
+        </form>
+
+        <div class="topo__acoes">
+            <a class="topo__link" th:href="@{/}" th:if="${secao != 'publico'}">Ver a vitrine</a>
+
+            <span sec:authorize="isAuthenticated()" class="topo__usuario">
+                Ola, <strong sec:authentication="name">usuario</strong>
+            </span>
+
+            <a sec:authorize="hasRole('ADMIN')" class="topo__link" th:href="@{/admin}"
+               th:if="${secao == 'publico'}">Painel</a>
+
+            <a sec:authorize="!isAuthenticated()" class="topo__link" th:href="@{/login}">Entrar</a>
+
+            <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                <button type="submit" class="topo__sair">Sair</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<!-- ================= Faixa da area privada ================= -->
+<nav class="faixa-admin" th:fragment="faixaAdmin(pagina)" aria-label="Navegacao do painel">
+    <div class="envelope faixa-admin__conteudo">
+        <strong>Painel administrativo</strong>
+        <a th:href="@{/admin}" th:attrappend="aria-current=${pagina == 'lista'} ? 'page' : null">Produtos</a>
+        <a th:href="@{/}">Vitrine publica</a>
+    </div>
+</nav>
+
+<!-- ================= Mensagens flash ================= -->
+<div th:fragment="avisos">
+    <p class="aviso" role="status" th:if="${sucesso}" th:text="${sucesso}">Mensagem de sucesso.</p>
+    <p class="aviso aviso--erro" role="alert" th:if="${falha}" th:text="${falha}">Mensagem de erro.</p>
+</div>
+
+<!-- ================= Rodape ================= -->
+<footer class="rodape" th:fragment="rodape">
+    <div class="envelope rodape__conteudo">
+        <span>Mercado Express &middot; Checkpoint 4 - Parte II &middot; FIAP TDS</span>
+        <span>Spring MVC, Thymeleaf, Spring Security e Oracle</span>
+    </div>
+</footer>
+
+</body>
+</html>
