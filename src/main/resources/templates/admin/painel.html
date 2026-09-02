@@ -15,8 +15,9 @@
         <div class="painel-cabecalho">
             <div>
                 <h1>Produtos cadastrados</h1>
-                <p>Tudo o que esta cadastrado no banco, inclusive o que nao aparece na vitrine.</p>
+                <p>Cadastre, edite e exclua os itens que aparecem na vitrine publica.</p>
             </div>
+            <a class="botao" th:href="@{/admin/produtos/novo}">Cadastrar produto</a>
         </div>
 
         <div class="resumo">
@@ -66,6 +67,7 @@
                     <th scope="col" class="numero">Estoque</th>
                     <th scope="col">Situacao</th>
                     <th scope="col">Cadastro</th>
+                    <th scope="col">Acoes</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -86,6 +88,18 @@
                     </td>
                     <td th:text="${produto.dataCadastro != null}
                                  ? ${#temporals.format(produto.dataCadastro, 'dd/MM/yyyy')} : '-'">01/09/2026</td>
+                    <td>
+                        <div class="tabela__acoes">
+                            <a class="acao-linha"
+                               th:href="@{/admin/produtos/{id}/editar(id=${produto.id})}">Editar</a>
+
+                            <!-- Exclusao por POST + confirmacao do navegador (ver static/js/app.js) -->
+                            <form th:action="@{/admin/produtos/{id}/excluir(id=${produto.id})}" method="post"
+                                  th:data-confirmar="|Excluir o produto ${produto.nome}? Essa acao nao tem volta.|">
+                                <button type="submit" class="acao-linha acao-linha--perigo">Excluir</button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -98,8 +112,9 @@
                 Limpe os filtros para ver a lista completa ou cadastre um produto novo.
             </p>
             <p th:unless="${busca != null or setorSelecionado != null}">
-                A vitrine publica so ganha vida depois do primeiro cadastro.
+                A vitrine publica so ganha vida depois do primeiro cadastro. Leva menos de um minuto.
             </p>
+            <a class="botao" th:href="@{/admin/produtos/novo}">Cadastrar produto</a>
         </div>
 
         <nav th:replace="~{fragments/paginacao :: paginacao(${pagina}, '/admin', ${busca}, ${setorSelecionado})}"></nav>
@@ -108,5 +123,6 @@
 </main>
 
 <footer th:replace="~{fragments/layout :: rodape}"></footer>
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>

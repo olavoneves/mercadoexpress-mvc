@@ -60,6 +60,8 @@
     <div class="envelope faixa-admin__conteudo">
         <strong>Painel administrativo</strong>
         <a th:href="@{/admin}" th:attrappend="aria-current=${pagina == 'lista'} ? 'page' : null">Produtos</a>
+        <a th:href="@{/admin/produtos/novo}"
+           th:attrappend="aria-current=${pagina == 'novo'} ? 'page' : null">Cadastrar produto</a>
         <a th:href="@{/}">Vitrine publica</a>
     </div>
 </nav>

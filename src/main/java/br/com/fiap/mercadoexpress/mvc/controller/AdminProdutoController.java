@@ -11,17 +11,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Area privada: o painel de produtos.
+ * Area privada: o CRUD completo de produtos.
  *
  * <p>Todo o mapeamento nasce em /admin, que o
  * {@link br.com.fiap.mercadoexpress.mvc.config.SecurityConfig} reserva para
- * quem tem ROLE_ADMIN.</p>
+ * quem tem ROLE_ADMIN. Cada operacao que altera dados termina em um redirect
+ * com mensagem flash, evitando reenvio de formulario no F5.</p>
  */
 @Controller
 @RequestMapping("/admin")
@@ -56,5 +61,71 @@ public class AdminProdutoController {
         model.addAttribute("totalInativos", service.contarInativos());
 
         return "admin/painel";
+    }
+
+    // ------------------------------------------------------------------
+    // CREATE
+    // ------------------------------------------------------------------
+
+    /** GET /admin/produtos/novo - formulario em branco. */
+    @GetMapping("/produtos/novo")
+    public String formularioDeCadastro(Model model) {
+        Produto novo = new Produto();
+        novo.setAtivo(Boolean.TRUE);
+        novo.setEstoque(0);
+        novo.setDataCadastro(LocalDate.now());
+
+        model.addAttribute("produto", novo);
+        model.addAttribute("edicao", false);
+        return "admin/formulario";
+    }
+
+    /** POST /admin/produtos - grava o novo produto. */
+    @PostMapping("/produtos")
+    public String criar(@ModelAttribute("produto") Produto produto,
+                        RedirectAttributes flash) {
+
+        Produto salvo = service.criar(produto);
+        flash.addFlashAttribute("sucesso", "Produto \"" + salvo.getNome() + "\" cadastrado com sucesso.");
+        return "redirect:/admin";
+    }
+
+    // ------------------------------------------------------------------
+    // UPDATE
+    // ------------------------------------------------------------------
+
+    /** GET /admin/produtos/{id}/editar - formulario preenchido. */
+    @GetMapping("/produtos/{id}/editar")
+    public String formularioDeEdicao(@PathVariable Long id, Model model) {
+        model.addAttribute("produto", service.buscarPorId(id));
+        model.addAttribute("edicao", true);
+        return "admin/formulario";
+    }
+
+    /** POST /admin/produtos/{id} - aplica a edicao. */
+    @PostMapping("/produtos/{id}")
+    public String atualizar(@PathVariable Long id,
+                            @ModelAttribute("produto") Produto produto,
+                            RedirectAttributes flash) {
+
+        Produto salvo = service.atualizar(id, produto);
+        flash.addFlashAttribute("sucesso", "Produto \"" + salvo.getNome() + "\" atualizado com sucesso.");
+        return "redirect:/admin";
+    }
+
+    // ------------------------------------------------------------------
+    // DELETE
+    // ------------------------------------------------------------------
+
+    /**
+     * POST /admin/produtos/{id}/excluir - remove o produto.
+     * E POST (nunca GET) para que nenhum link ou robo consiga apagar dados,
+     * e o formulario da tabela pede confirmacao antes de enviar.
+     */
+    @PostMapping("/produtos/{id}/excluir")
+    public String excluir(@PathVariable Long id, RedirectAttributes flash) {
+        String nome = service.excluir(id);
+        flash.addFlashAttribute("sucesso", "Produto \"" + nome + "\" excluido definitivamente.");
+        return "redirect:/admin";
     }
 }
