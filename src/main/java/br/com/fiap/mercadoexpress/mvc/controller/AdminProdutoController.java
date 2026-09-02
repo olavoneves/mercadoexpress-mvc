@@ -2,6 +2,7 @@ package br.com.fiap.mercadoexpress.mvc.controller;
 
 import br.com.fiap.mercadoexpress.mvc.model.Produto;
 import br.com.fiap.mercadoexpress.mvc.service.ProdutoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,8 +84,15 @@ public class AdminProdutoController {
 
     /** POST /admin/produtos - grava o novo produto. */
     @PostMapping("/produtos")
-    public String criar(@ModelAttribute("produto") Produto produto,
+    public String criar(@Valid @ModelAttribute("produto") Produto produto,
+                        BindingResult erros,
+                        Model model,
                         RedirectAttributes flash) {
+
+        if (erros.hasErrors()) {
+            model.addAttribute("edicao", false);
+            return "admin/formulario";
+        }
 
         Produto salvo = service.criar(produto);
         flash.addFlashAttribute("sucesso", "Produto \"" + salvo.getNome() + "\" cadastrado com sucesso.");
@@ -105,8 +114,16 @@ public class AdminProdutoController {
     /** POST /admin/produtos/{id} - aplica a edicao. */
     @PostMapping("/produtos/{id}")
     public String atualizar(@PathVariable Long id,
-                            @ModelAttribute("produto") Produto produto,
+                            @Valid @ModelAttribute("produto") Produto produto,
+                            BindingResult erros,
+                            Model model,
                             RedirectAttributes flash) {
+
+        if (erros.hasErrors()) {
+            model.addAttribute("edicao", true);
+            model.addAttribute("idEmEdicao", id);
+            return "admin/formulario";
+        }
 
         Produto salvo = service.atualizar(id, produto);
         flash.addFlashAttribute("sucesso", "Produto \"" + salvo.getNome() + "\" atualizado com sucesso.");
