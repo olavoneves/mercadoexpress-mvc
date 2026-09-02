@@ -19,6 +19,7 @@
     --alerta: #B3261E;
     --alerta-fundo: #FCEDEC;
     --verde-claro: #E3F1E8;
+    --verde-selo: #CFE6D9;
 
     /* Os raios variam conforme o papel do elemento, de proposito:
        cartao 4px, controle 2px, chip pilula, tabela 0. */
@@ -502,7 +503,9 @@ a { color: var(--verde-folha); }
 
 .selo--esgotado { background: var(--alerta-fundo); color: var(--alerta); }
 .selo--estoque { background: var(--cinza-caixa); color: var(--cinza-texto); }
-.selo--ativo { background: var(--verde-claro); color: var(--verde-escuro); }
+/* Fundo um pouco mais forte que --verde-claro: o selo precisa se destacar
+   tanto na linha branca quanto na linha cinza da tabela zebrada. */
+.selo--ativo { background: var(--verde-selo); color: var(--verde-escuro); }
 .selo--inativo { background: var(--cinza-caixa); color: var(--cinza-texto); }
 
 /* ------------------------------------------------------------------
