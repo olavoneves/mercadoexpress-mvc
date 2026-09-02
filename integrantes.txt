@@ -2,20 +2,24 @@ FIAP - Curso de Tecnologia em Analise e Desenvolvimento de Sistemas (TDS)
 Checkpoint 4 - Parte II (MVC e Deploy)
 Professor: Dr. Marcel Stefan Wagner
 
-Turma: [PREENCHER]
+Turma: 2TDSR
 Curso: Analise e Desenvolvimento de Sistemas (TDS)
 
 INTEGRANTES:
-Nome: Olavo Neves        RM: 563558
-Nome: [PREENCHER]        RM: [PREENCHER]
-Nome: [PREENCHER]        RM: [PREENCHER]
+Nome: Olavo Porto Neves      RM: 563558
+Nome: Pedro Henrique Franca  RM: 561940
+Nome: Luiz Goncalves         RM: 564495
 
-Repositorio GitHub (Parte II - Spring MVC): [PREENCHER LINK]
-Repositorio GitHub (Parte I - API REST):    [PREENCHER LINK]
-Link do Deploy: [PREENCHER LINK]
+Repositorio GitHub (Parte II - Spring MVC): https://github.com/olavoneves/mercadoexpress-mvc
+Repositorio GitHub (Parte I - API REST):    https://github.com/olavoneves/mercadoexpress-api
+Link do Deploy: https://mercadoexpress-mvc.onrender.com
 Sistema utilizado para o Deploy: Render (Docker)
 IDE utilizada: IntelliJ IDEA
 Video de demonstracao: [PREENCHER LINK]
+
+Observacao sobre o deploy: o plano gratuito do Render hiberna o servico apos
+15 minutos sem acesso. O primeiro carregamento pode levar cerca de 50 segundos
+enquanto o container sobe; os acessos seguintes sao imediatos.
 
 CREDENCIAIS DE TESTE:
 admin / admin123  (ROLE_ADMIN - acessa o painel e o CRUD completo)

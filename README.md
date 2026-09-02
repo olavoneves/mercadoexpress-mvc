@@ -12,9 +12,14 @@ sem `@RestController` e sem HATEOAS. Aqui o servidor devolve HTML renderizado co
 Thymeleaf. O que veio da Parte I foi a modelagem do domínio — entidade, repository e a
 ideia da camada de serviço — e o banco Oracle, que é o mesmo.
 
-> 🔗 **Aplicação publicada:** [PREENCHER LINK DO DEPLOY]
+> 🔗 **Aplicação publicada:** https://mercadoexpress-mvc.onrender.com
 > 🎥 **Vídeo de demonstração:** [PREENCHER LINK DO VÍDEO]
-> 📦 **Parte I (API REST):** [PREENCHER LINK DO REPOSITÓRIO DA PARTE I]
+> 📦 **Parte I (API REST):** https://github.com/olavoneves/mercadoexpress-api
+> 📦 **Parte II (este repositório):** https://github.com/olavoneves/mercadoexpress-mvc
+>
+> ⏱️ O plano gratuito do Render hiberna o serviço após 15 minutos sem acesso.
+> O primeiro carregamento pode levar cerca de **50 segundos** enquanto o container
+> sobe; os acessos seguintes são imediatos.
 
 ---
 
@@ -149,6 +154,7 @@ Esta separação é o eixo do requisito de segurança do checkpoint.
 | `POST` | `/login` | Autenticação (processada pelo filtro do Spring Security) |
 | `GET` | `/css/**`, `/js/**`, `/img/**` | Arquivos estáticos |
 | `GET` | `/acesso-negado` | Página 403 |
+| — | `/error` | Página de erro (despacho interno do Spring Boot) |
 
 ### 🔒 Rotas privadas — exigem autenticação com `ROLE_ADMIN`
 
@@ -182,9 +188,16 @@ Por isso as rotas públicas vêm antes do bloqueio de `/admin/**`:
 http.authorizeHttpRequests(rotas -> rotas
         .requestMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico").permitAll()
         .requestMatchers("/", "/produtos/**", "/login", "/acesso-negado").permitAll()
+        .requestMatchers("/error").permitAll()
         .requestMatchers("/admin/**").hasRole("ADMIN")
         .anyRequest().authenticated())
 ```
+
+> **Por que `/error` é público?** O Spring Boot despacha os erros internamente para
+> `/error`, e esse despacho também atravessa esta mesma cadeia de filtros. Sem liberar
+> a rota, qualquer falha numa página pública virava um redirect para `/login` — e, em
+> um cliente sem cookie de sessão, um **loop de redirecionamento**. A página de erro
+> não expõe stack trace: mostra apenas o código e uma mensagem.
 
 ### 5.2 Login com página própria
 
@@ -550,7 +563,16 @@ O `render.yaml` declara as variáveis de ambiente com `sync: false`, então
 `DB_URL`, `DB_USER` e `DB_PASSWORD` são preenchidas no painel do Render e nunca
 ficam versionadas.
 
-🔗 **Aplicação no ar:** [PREENCHER LINK DO DEPLOY]
+Como a aplicação roda atrás do proxy do Render, `application.properties` traz
+`server.forward-headers-strategy=framework`, para que os redirects sejam gerados
+com o host público e o esquema `https` corretos.
+
+🔗 **Aplicação no ar:** https://mercadoexpress-mvc.onrender.com
+
+> ⏱️ **Primeiro acesso demora.** O plano gratuito do Render hiberna o serviço após
+> 15 minutos sem tráfego. A primeira requisição acorda o container e pode levar
+> cerca de **50 segundos** para responder — depois disso a navegação é imediata.
+> Se a página parecer travada, espere; ela carrega.
 
 <!-- [SUBSTITUIR] Print da aplicação publicada e funcionando no Render -->
 ![Deploy no ar](docs/12-deploy-no-ar.png)
@@ -561,11 +583,16 @@ ficam versionadas.
 
 | Nome | RM |
 |---|---|
-| Olavo Neves | 563558 |
-| [PREENCHER] | [PREENCHER] |
-| [PREENCHER] | [PREENCHER] |
+| Olavo Porto Neves | 563558 |
+| Pedro Henrique França | 561940 |
+| Luiz Gonçalves | 564495 |
 
-**Turma:** [PREENCHER] · **Curso:** Análise e Desenvolvimento de Sistemas (TDS)
+**Turma:** 2TDSR · **Curso:** Análise e Desenvolvimento de Sistemas (TDS)
 **IDE utilizada:** IntelliJ IDEA · **Deploy:** Render (Docker)
+
+| Repositório | Link |
+|---|---|
+| Parte II — Spring MVC (este) | https://github.com/olavoneves/mercadoexpress-mvc |
+| Parte I — API REST | https://github.com/olavoneves/mercadoexpress-api |
 
 Os dados completos da equipe estão em [`integrantes.txt`](integrantes.txt).
