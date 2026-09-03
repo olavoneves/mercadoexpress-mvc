@@ -629,8 +629,9 @@ com o host público e o esquema `https` corretos.
 
 *Serviço `mercadoexpress-mvc` no painel do Render: runtime **Docker**, plano Free,
 ligado ao repositório `olavoneves/mercadoexpress-mvc` na branch `main`, com status
-**Live** e a URL pública. O próprio painel avisa que a instância gratuita hiberna e pode
-atrasar a primeira requisição em 50 segundos ou mais.*
+**Live** e a URL pública. O histórico mostra os dois deploys já publicados, o mais recente
+apontando para o commit no topo da `main`. O próprio painel avisa que a instância gratuita
+hiberna e pode atrasar a primeira requisição em 50 segundos ou mais.*
 
 ---
 
