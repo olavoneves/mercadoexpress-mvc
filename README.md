@@ -54,8 +54,11 @@ ideia da camada de serviço — e o banco Oracle, que é o mesmo.
 O visitante enxerga apenas produtos **ativos**. O painel enxerga tudo, inclusive o que
 foi tirado da vitrine sem ser apagado do banco.
 
-<!-- [SUBSTITUIR] Print do Spring Initializr com as dependências da Parte II -->
 ![Configuração do Spring Initializr](docs/01-spring-initializr.png)
+
+*Geração do projeto no Spring Initializr: Maven, Java 21, Spring Boot 4.1.1 e as
+dependências da Parte II — Spring Web, **Thymeleaf**, Spring Data JPA, **Spring Security**,
+**Lombok**, Validation e Oracle Driver.*
 
 ---
 
@@ -282,11 +285,18 @@ na própria tela de login para facilitar a correção.
 | `admin` | `admin123` | `ROLE_ADMIN` | Tudo: vitrine **e** painel com o CRUD completo |
 | `user` | `user123` | `ROLE_USER` | Só a parte pública; `/admin` devolve **403** |
 
-<!-- [SUBSTITUIR] Print da tela de login com a identidade visual do projeto -->
 ![Tela de login](docs/05-tela-de-login.png)
 
-<!-- [SUBSTITUIR] Print da página 403 ao tentar abrir /admin logado como "user" -->
+*Formulário de login próprio em `/login`, com a identidade visual do projeto no lugar da
+tela padrão do Spring Security. O print mostra também o tratamento de credencial inválida:
+depois de um envio incorreto o filtro redireciona para `/login?erro` e a página exibe
+"Usuario ou senha incorretos", sem revelar qual dos dois campos falhou.*
+
 ![Acesso negado a uma rota privada](docs/06-acesso-negado-403.png)
+
+*Rota privada barrada: autenticado como `user` (veja "Ola, user" no cabeçalho), o acesso a
+`/admin` cai na página **403** do projeto. O visitante continua logado — o que falta é a
+permissão `ROLE_ADMIN`, não a autenticação.*
 
 ---
 
@@ -343,8 +353,11 @@ diferença entre o painel e a vitrine.
 
 Execute-o no SQL Developer conectado com o seu usuário RM.
 
-<!-- [SUBSTITUIR] Print da tabela TDS_MVC_TB_MERCADO criada no SQL Developer -->
 ![Tabela no SQL Developer](docs/02-tabela-oracle.png)
+
+*Execução de `database/script.sql` no SQL Developer, conectado ao Oracle da FIAP: a saída
+confirma "Table TDS_MVC_TB_MERCADO criado", com as constraints de preço, estoque e situação
+(`ATIVO IN ('S','N')`) e os comentários de coluna.*
 
 ---
 
@@ -400,6 +413,12 @@ A aplicação sobe em **http://localhost:8080**.
 > A Parte I (API REST) usa a porta **8082**, então as duas rodam ao mesmo tempo na
 > mesma máquina sem conflito.
 
+![Aplicação subindo no IntelliJ IDEA](docs/15-app-rodando-intellij.png)
+
+*Projeto aberto no **IntelliJ IDEA**, a IDE usada no desenvolvimento, com a aplicação
+subindo pelo terminal integrado: Spring Boot 4.1.1, Java 21, perfil `default` (ou seja,
+conectando no Oracle da FIAP) e o Tomcat inicializado na porta 8080.*
+
 ---
 
 ## 9. O CRUD na interface web
@@ -412,16 +431,22 @@ Todas as operações aparecem como **links e botões**, sem cliente HTTP nenhum.
 identifica a gôndola e o estoque aparece como selo. A busca e o filtro de setor viajam na
 URL (`/?busca=banana&setor=Hortifruti`), o que torna o resultado compartilhável.
 
-<!-- [SUBSTITUIR] Print da vitrine pública com o grid de produtos -->
 ![Catálogo público](docs/03-catalogo-publico.png)
+
+*Vitrine pública em `/`, sem nenhuma autenticação — repare no botão "Entrar" no canto
+superior direito. Cada card traz o setor, o nome, tipo e tamanho, a etiqueta amarela de
+preço e o selo de estoque (a alface aparece como "Sem estoque hoje"). Acima, os chips
+filtram por setor e o contador mostra 12 produtos ativos.*
 
 ### 9.2 READ público — detalhe do produto
 
 `GET /produtos/{id}` abre a ficha completa: descrição, preço em destaque, tipo, setor,
 tamanho, estoque e data de cadastro.
 
-<!-- [SUBSTITUIR] Print da página de detalhe de um produto -->
 ![Detalhe do produto](docs/04-detalhe-do-produto.png)
+
+*Detalhe público em `/produtos/1`: descrição completa, preço em destaque na etiqueta e a
+ficha técnica com código, tipo, setor, tamanho, estoque e data de cadastro.*
 
 ### 9.3 READ privado — o painel
 
@@ -429,8 +454,12 @@ tamanho, estoque e data de cadastro.
 legibilidade e densidade valem mais que enfeite. Traz contadores de situação, busca,
 filtro por setor e paginação com `Pageable` (10 por página).
 
-<!-- [SUBSTITUIR] Print do painel administrativo com a tabela de produtos -->
 ![Painel administrativo](docs/07-painel-admin.png)
+
+*Painel privado em `/admin`, já autenticado como `admin`. Tabela densa com todos os
+produtos — inclusive o "Panetone tradicional", marcado como **Fora de linha** e por isso
+ausente da vitrine. Cada linha traz os links **Editar** e **Excluir**, e no topo ficam os
+contadores, a busca, o filtro por setor e o botão "Cadastrar produto".*
 
 ### 9.4 CREATE — cadastrar produto
 
@@ -438,8 +467,11 @@ filtro por setor e paginação com `Pageable` (10 por página).
 a aplicação redireciona para o painel com uma mensagem de sucesso via `RedirectAttributes`
 (padrão *post-redirect-get*, que evita reenvio no F5).
 
-<!-- [SUBSTITUIR] Print do formulário de cadastro de produto -->
 ![Formulário de cadastro](docs/08-formulario-cadastro.png)
+
+*Formulário de cadastro em `/admin/produtos/novo`, preenchido com o produto "Bolo de
+Nozes". Coluna única, labels acima dos campos, textos de ajuda abaixo e o marcador
+"Exibir na vitrine pública" controlando a coluna `ATIVO`.*
 
 ### 9.5 UPDATE — editar produto
 
@@ -447,8 +479,16 @@ a aplicação redireciona para o painel com uma mensagem de sucesso via `Redirec
 `POST /admin/produtos/{id}` aplica a alteração. O service atualiza campo a campo,
 preservando `ID` e `DATA_CADASTRO` originais.
 
-<!-- [SUBSTITUIR] Print do formulário de edição preenchido -->
 ![Formulário de edição](docs/09-formulario-edicao.png)
+
+*O mesmo formulário reaberto em `/admin/produtos/15/editar`, já carregado com os dados
+gravados. Aqui o preço está sendo alterado de 35.90 para 45,90.*
+
+![Painel após a edição](docs/13-painel-apos-edicao.png)
+
+*Depois do `POST`, a aplicação redireciona para o painel e exibe a mensagem flash
+`Produto "Bolo de Nozes" atualizado com sucesso.` — o padrão post-redirect-get, que evita
+reenvio do formulário no F5. A linha 15 já mostra o preço novo, R$ 45,90.*
 
 ### 9.6 DELETE — excluir produto
 
@@ -456,8 +496,16 @@ O botão **Excluir** da linha envia um `POST` para `/admin/produtos/{id}/excluir
 de uma confirmação no navegador. A ação é irreversível — por isso o botão é vermelho e
 pergunta antes.
 
-<!-- [SUBSTITUIR] Print da confirmação de exclusão do produto -->
 ![Confirmação de exclusão](docs/10-confirmacao-exclusao.png)
+
+*Clique em **Excluir** na linha da "Picanha": antes de enviar o `POST`, o navegador pede
+confirmação — "Excluir o produto Picanha? Essa acao nao tem volta." Cancelar aborta a
+operação.*
+
+![Painel após a exclusão](docs/14-painel-apos-exclusao.png)
+
+*Confirmada a exclusão, o painel volta com a mensagem `Produto "Picanha" excluido
+definitivamente.` O registro sumiu da tabela e os contadores caíram de 15 para 14.*
 
 > **Alternativa à exclusão:** desmarcar *"Exibir na vitrine pública"* no formulário tira
 > o produto do ar sem apagar o registro do banco.
@@ -508,8 +556,11 @@ Nenhum erro de formulário chega ao Whitelabel. Id inexistente na URL também n�
 `ProdutoNaoEncontradoException` é traduzida pelo `@ControllerAdvice` numa página 404 com
 a identidade visual do projeto.
 
-<!-- [SUBSTITUIR] Print do formulário com erros de validação campo a campo -->
 ![Validação com erro de campo](docs/11-validacao-erro.png)
+
+*Tentativa de salvar o formulário em branco: o `BindingResult` acusa erro, o controller
+devolve a própria página e cada campo inválido ganha borda vermelha com a mensagem
+abaixo, além do resumo no topo listando tudo o que precisa ser corrigido.*
 
 ---
 
@@ -574,8 +625,12 @@ com o host público e o esquema `https` corretos.
 > cerca de **50 segundos** para responder — depois disso a navegação é imediata.
 > Se a página parecer travada, espere; ela carrega.
 
-<!-- [SUBSTITUIR] Print da aplicação publicada e funcionando no Render -->
 ![Deploy no ar](docs/12-deploy-no-ar.png)
+
+*Serviço `mercadoexpress-mvc` no painel do Render: runtime **Docker**, plano Free,
+ligado ao repositório `olavoneves/mercadoexpress-mvc` na branch `main`, com status
+**Live** e a URL pública. O próprio painel avisa que a instância gratuita hiberna e pode
+atrasar a primeira requisição em 50 segundos ou mais.*
 
 ---
 
