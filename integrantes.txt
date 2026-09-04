@@ -15,7 +15,7 @@ Repositorio GitHub (Parte I - API REST):    https://github.com/olavoneves/mercad
 Link do Deploy: https://mercadoexpress-mvc.onrender.com
 Sistema utilizado para o Deploy: Render (Docker)
 IDE utilizada: IntelliJ IDEA
-Video de demonstracao: [PREENCHER LINK]
+Video de demonstracao: https://youtu.be/Cd0JvD0ycyI
 
 Observacao sobre o deploy: o plano gratuito do Render hiberna o servico apos
 15 minutos sem acesso. O primeiro carregamento pode levar cerca de 50 segundos

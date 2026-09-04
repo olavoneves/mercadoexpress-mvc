@@ -13,7 +13,7 @@ Thymeleaf. O que veio da Parte I foi a modelagem do domínio — entidade, repos
 ideia da camada de serviço — e o banco Oracle, que é o mesmo.
 
 > 🔗 **Aplicação publicada:** https://mercadoexpress-mvc.onrender.com
-> 🎥 **Vídeo de demonstração:** [PREENCHER LINK DO VÍDEO]
+> 🎥 **Vídeo de demonstração:** https://youtu.be/Cd0JvD0ycyI
 > 📦 **Parte I (API REST):** https://github.com/olavoneves/mercadoexpress-api
 > 📦 **Parte II (este repositório):** https://github.com/olavoneves/mercadoexpress-mvc
 >
@@ -646,9 +646,10 @@ hiberna e pode atrasar a primeira requisição em 50 segundos ou mais.*
 **Turma:** 2TDSR · **Curso:** Análise e Desenvolvimento de Sistemas (TDS)
 **IDE utilizada:** IntelliJ IDEA · **Deploy:** Render (Docker)
 
-| Repositório | Link |
+| Recurso | Link |
 |---|---|
 | Parte II — Spring MVC (este) | https://github.com/olavoneves/mercadoexpress-mvc |
 | Parte I — API REST | https://github.com/olavoneves/mercadoexpress-api |
+| Vídeo de demonstração | https://youtu.be/Cd0JvD0ycyI |
 
 Os dados completos da equipe estão em [`integrantes.txt`](integrantes.txt).
